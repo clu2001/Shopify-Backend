@@ -1,5 +1,7 @@
-from flask import Flask, request, render_template, redirect, abort
+from flask import Flask, request, render_template, redirect, abort, Response
 from InventoryModel import database, InventoryModel
+import io
+import csv
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///InventoryDatabase.db'
@@ -55,8 +57,23 @@ def delete(inventory_id):
             database.session.commit()
             return redirect('/data')
         abort(404)
- 
     return render_template('delete.html')
+
+@app.route('/download')
+def download():
+	return render_template('download.html')
+
+@app.route('/download/report/csv')
+def download_report():
+    outfile = open('InventoryModel.csv', 'w')
+    outcsv = csv.writer(outfile)
+    records = database.session.query(InventoryModel).all()
+    
+    for item in records: 
+        outcsv.writerow([item.inventory_id, item.item_name])
+
+    outfile.close()
+    return Response(outfile, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=Inventory.csv"})
 
 app.run(host="localhost", port=5000)
 
