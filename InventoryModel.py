@@ -7,10 +7,10 @@ class InventoryModel(database.Model):
     __tablename__ = "Inventory"
  
     id = database.Column(database.Integer, primary_key=True)
-    inventory_id = database.Column(database.Integer(),unique = True)
+    inventory_id = database.Column(database.Integer())
     item_name = database.Column(database.String())
  
-    def __init__(self, inventory_id,item_name,age,position):
+    def __init__(self, inventory_id,item_name):
         self.inventory_id = inventory_id
         self.item_name = item_name
  
