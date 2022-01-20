@@ -1,7 +1,8 @@
 # Shopify-Backend
 
-# please serve app with python3 app.y after installing flask
-# please view CRUD functionalities by redirecting to different pages:
+please serve app with python3 app.y after installing flask and necessary python3 
+requirements (listed in python_requirements.txt)
+please view CRUD functionalities by redirecting to different pages:
 
 Create View
 http://localhost:5000/data/create 
