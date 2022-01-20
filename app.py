@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, redirect, abort, Response
 from InventoryModel import database, InventoryModel
-import io
 import csv
 
 app = Flask(__name__)
@@ -65,15 +64,14 @@ def download():
 
 @app.route('/download/report/csv')
 def download_report():
-    outfile = open('InventoryModel.csv', 'w')
-    outcsv = csv.writer(outfile)
-    records = database.session.query(InventoryModel).all()
-    
-    for item in records: 
-        outcsv.writerow([item.inventory_id, item.item_name])
+    with open('InventoryModel.csv', 'w') as outfile: 
 
-    outfile.close()
-    return Response(outfile, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=Inventory.csv"})
+        writer = csv.writer(outfile)
+        records = InventoryModel.query.all()
+        for item in records:
+            writer.writerow([item])
+    
+    return Response(outfile, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=InventoryModel.csv"})
 
 app.run(host="localhost", port=5000)
 
