@@ -11,6 +11,10 @@ database.init_app(app)
 def create_table():
     database.create_all()
 
+@app.route('/')
+def home():
+    return render_template('homepage.html')
+
 @app.route('/data/create', methods = ['GET','POST'])
 def create():
     if request.method == 'GET':
@@ -29,10 +33,11 @@ def RetrieveDataList():
     inventory = InventoryModel.query.all()
     return render_template('datalist.html', inventory = inventory)
 
-@app.route('/data/<int:id>/update',methods = ['GET','POST'])
-def update(inventory_id):
-    inventory = InventoryModel.query.filter_by(inventory_id=inventory_id).first()
+@app.route('/data/update', methods = ['GET','POST'])
+def update():
     if request.method == 'POST':
+        inventory_id = request.form['inventory_id']
+        inventory = InventoryModel.query.filter_by(inventory_id=inventory_id).first()
         if inventory:
             database.session.delete(inventory)
             database.session.commit()
@@ -42,21 +47,21 @@ def update(inventory_id):
  
             database.session.add(inventory)
             database.session.commit()
-            return redirect(f'/data/{inventory_id}')
+            return redirect(f'/data')
         return f"Inventory with id: {inventory_id} does not exist :("
- 
-    return render_template('update.html', inventory = inventory)
+    return render_template('createpage.html')
 
-@app.route('/data/<int:id>/delete', methods=['GET','POST'])
-def delete(inventory_id):
-    inventory = InventoryModel.query.filter_by(inventory_id=inventory_id).first()
+@app.route('/data/delete', methods=['GET','POST'])
+def delete():
     if request.method == 'POST':
+        inventory_id = request.form['inventory_id']
+        inventory = InventoryModel.query.filter_by(inventory_id=inventory_id).first()
         if inventory:
             database.session.delete(inventory)
             database.session.commit()
             return redirect('/data')
         abort(404)
-    return render_template('delete.html')
+    return render_template('createpage.html')
 
 @app.route('/download')
 def download():
