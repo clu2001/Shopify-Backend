@@ -13,7 +13,7 @@ http://localhost:5000/data
 Update View 
 http://localhost:5000/data/update
 
-Update View 
+Delete View 
 http://localhost:5000/data/delete
 
 function chosen was exporting inventory to CSV at the press of a button (CSV will be saved within same folder as app.py) 
